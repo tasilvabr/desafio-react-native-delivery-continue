@@ -160,7 +160,15 @@ const FoodDetails: React.FC = () => {
   }, [extras, food, foodQuantity]);
 
   async function handleFinishOrder(): Promise<void> {
-    // Finish the order and save on the API
+    const orderExists = await api.get('orders', {
+      params: {
+        id: food.id,
+      },
+    });
+    if (orderExists){
+      await api.delete(`orders/${food.id}`);
+    }
+    await api.post('orders/', food);
   }
 
   // Calculate the correct icon name
